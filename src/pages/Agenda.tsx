@@ -28,7 +28,7 @@ import {
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
-import axios from 'axios';
+import api from '../api/axios';
 import { 
   format, 
   startOfMonth, 
@@ -68,7 +68,7 @@ export default function Agenda() {
     try {
       const year = selectedDate.getFullYear();
       const month = selectedDate.getMonth() + 1;
-      const response = await axios.get(`/api/activities/month/${year}/${month}`);
+      const response = await api.get(`/api/activities/month/${year}/${month}`);
       setMonthData(response.data);
     } catch (error) {
       console.error('Error fetching month data:', error);

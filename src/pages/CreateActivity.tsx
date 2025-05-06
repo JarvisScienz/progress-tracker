@@ -9,7 +9,7 @@ import {
   MenuItem,
   Alert,
 } from '@mui/material';
-import axios from 'axios';
+import api from '../api/axios';
 
 interface ActivityForm {
   title: string;
@@ -41,7 +41,7 @@ export default function CreateActivity() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post('/api/activities', formData);
+      await api.post('/api/activities', formData);
       navigate('/');
     } catch (err) {
       setError('Failed to create activity. Please try again.');

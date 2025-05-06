@@ -9,7 +9,7 @@ import {
   MenuItem,
   Alert,
 } from '@mui/material';
-import axios from 'axios';
+import api from '../api/axios';
 
 interface Activity {
   _id: string;
@@ -30,7 +30,7 @@ export default function EditActivity() {
   useEffect(() => {
     const fetchActivity = async () => {
       try {
-        const response = await axios.get(`/api/activities/${id}`);
+        const response = await api.get(`/api/activities/${id}`);
         setActivity(response.data);
       } catch (err) {
         setError('Failed to load activity');
@@ -47,7 +47,7 @@ export default function EditActivity() {
     if (!activity) return;
 
     try {
-      await axios.put(`/api/activities/${id}`, activity);
+      await api.put(`/api/activities/${id}`, activity);
       navigate('/');
     } catch (err) {
       setError('Failed to update activity');

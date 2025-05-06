@@ -29,7 +29,7 @@ import {
   Edit as EditIcon,
   History as HistoryIcon,
 } from '@mui/icons-material';
-import axios from 'axios';
+import api from '../api/axios';
 
 interface Activity {
   _id: string;
@@ -102,7 +102,7 @@ export default function Dashboard() {
 
   const fetchActivities = async () => {
     try {
-      const response = await axios.get('/api/activities');
+      const response = await api.get('/api/activities');
       setActivities(response.data);
     } catch (error) {
       console.error('Error fetching activities:', error);
@@ -123,7 +123,7 @@ export default function Dashboard() {
         return recordDate.getTime() === today.getTime() && record.completed;
       });
 
-      await axios.post(`/api/activities/${activityId}/complete`, {
+      await api.post(`/api/activities/${activityId}/complete`, {
         completed: !isCompletedToday
       });
       fetchActivities();
@@ -135,7 +135,7 @@ export default function Dashboard() {
   const handleDelete = async () => {
     if (!selectedActivity) return;
     try {
-      await axios.delete(`/api/activities/${selectedActivity._id}`);
+      await api.delete(`/api/activities/${selectedActivity._id}`);
       setDeleteDialogOpen(false);
       fetchActivities();
     } catch (error) {
