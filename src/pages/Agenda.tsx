@@ -15,7 +15,6 @@ import {
   List,
   ListItem,
   ListItemIcon,
-  ListItemText,
 } from '@mui/material';
 import {
   Check as CheckIcon,
@@ -105,9 +104,9 @@ export default function Agenda() {
     return percentage >= settings.thresholdPercentage ? 'success' : 'error';
   };
 
-  const getStatusColor = (percentage: number) => {
+  /*const getStatusColor = (percentage: number) => {
     return percentage >= settings.thresholdPercentage ? 'success' : 'error';
-  };
+  };*/
 
   // Days of week starting from Monday
   const daysOfWeek = ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'];

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import {
   Box,
@@ -19,7 +18,6 @@ interface Settings {
 }
 
 const Settings: React.FC = () => {
-  const navigate = useNavigate();
   const [settings, setSettings] = useState<Settings>({
     thresholdPercentage: 70,
     username: ''

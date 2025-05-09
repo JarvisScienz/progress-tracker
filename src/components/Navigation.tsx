@@ -8,7 +8,6 @@ import {
   ListItemIcon,
   ListItemText,
   Box,
-  Divider
 } from '@mui/material';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import AddIcon from '@mui/icons-material/Add';
