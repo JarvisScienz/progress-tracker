@@ -32,7 +32,7 @@ export default defineConfig({
       }
     })
   ],
-  base: '/',
+  base: '/knowledge-center/',
   server: {
     proxy: {
       '/api': {
