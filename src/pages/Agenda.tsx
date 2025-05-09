@@ -42,15 +42,13 @@ import {
   endOfWeek
 } from 'date-fns';
 import { it } from 'date-fns/locale';
+import { useSettings } from '../contexts/SettingsContext';
 
 interface DayData {
   total: number;
   completed: number;
-  activities: Array<{
-    id: string;
-    name: string;
-    completed: boolean;
-  }>;
+  completedActivities: Array<string>;
+  nonCompletedActivities: Array<string>;
 }
 
 export default function Agenda() {
@@ -59,6 +57,7 @@ export default function Agenda() {
   const [monthData, setMonthData] = useState<Record<string, DayData>>({});
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const { settings } = useSettings();
 
   useEffect(() => {
     fetchMonthData();
@@ -103,7 +102,11 @@ export default function Agenda() {
     const data = monthData[dateStr];
     if (!data || data.total === 0) return null;
     const percentage = (data.completed / data.total) * 100;
-    return percentage >= 70 ? 'success' : 'error';
+    return percentage >= settings.thresholdPercentage ? 'success' : 'error';
+  };
+
+  const getStatusColor = (percentage: number) => {
+    return percentage >= settings.thresholdPercentage ? 'success' : 'error';
   };
 
   // Days of week starting from Monday
@@ -182,18 +185,13 @@ export default function Agenda() {
           {format(selectedDay, 'EEEE d MMMM yyyy', { locale: it })}
         </DialogTitle>
         <DialogContent>
-          {data ? (
+          {data.completedActivities.length != 0 ? (
             <List>
-              {data.activities.map((activity) => (
-                <ListItem key={activity.id}>
+              {data.completedActivities.map((activity) => (
+                <ListItem>
                   <ListItemIcon>
-                    {activity.completed ? (
-                      <CheckIcon color="success" />
-                    ) : (
-                      <CloseIcon color="error" />
-                    )}
+                    {activity} <CheckIcon color="success" />
                   </ListItemIcon>
-                  <ListItemText primary={activity.name} />
                 </ListItem>
               ))}
             </List>
@@ -215,12 +213,17 @@ export default function Agenda() {
       display: 'flex', 
       flexDirection: 'column', 
       height: '100%',
+      width: '80%',
+      maxWidth: '100%',
+      position: 'absolute',
       bgcolor: 'background.default',
+      top: 80,
     }}>
       <AppBar 
         position="static" 
         color="default" 
         elevation={0}
+        style={{ width: '100%' }}
       >
         <Toolbar sx={{ 
           flexDirection: { xs: 'column', sm: 'row' },

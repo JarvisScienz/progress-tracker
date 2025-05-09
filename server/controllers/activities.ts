@@ -185,12 +185,22 @@ export const getActivitiesForMonth = async (req: Request, res: Response) => {
     });
     console.log("Activites found", activities);
     // Create a map of dates to activity status
-    const monthData: Record<string, { total: number; completed: number }> = {};
+    const monthData: Record<string, { 
+      total: number; 
+      completed: number;
+      completedActivities: string[];
+      nonCompletedActivities: string[];
+    }> = {};
     
     // Initialize all days in the month
     for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
       const dateStr = date.toISOString().split('T')[0];
-      monthData[dateStr] = { total: 0, completed: 0 };
+      monthData[dateStr] = { 
+        total: 0, 
+        completed: 0,
+        completedActivities: [],
+        nonCompletedActivities: []
+      };
     }
 
     // Count activities for each day
@@ -200,11 +210,19 @@ export const getActivitiesForMonth = async (req: Request, res: Response) => {
         if (recordDate >= startDate && recordDate <= endDate) {
           const dateStr = recordDate.toISOString().split('T')[0];
           if (!monthData[dateStr]) {
-            monthData[dateStr] = { total: 0, completed: 0 };
+            monthData[dateStr] = { 
+              total: 0, 
+              completed: 0,
+              completedActivities: [],
+              nonCompletedActivities: []
+            };
           }
           monthData[dateStr].total++;
           if (record.completed) {
             monthData[dateStr].completed++;
+            monthData[dateStr].completedActivities.push(activity.title);
+          } else {
+            monthData[dateStr].nonCompletedActivities.push(activity.title);
           }
         }
       });

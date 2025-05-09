@@ -30,6 +30,7 @@ import {
   History as HistoryIcon,
 } from '@mui/icons-material';
 import api from '../api/axios';
+import { useSettings } from '../contexts/SettingsContext';
 
 interface Activity {
   _id: string;
@@ -95,6 +96,7 @@ export default function Dashboard() {
   const [historyDialogOpen, setHistoryDialogOpen] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
   const navigate = useNavigate();
+  const { settings } = useSettings();
 
   useEffect(() => {
     fetchActivities();
@@ -186,7 +188,7 @@ export default function Dashboard() {
 
   const getProgressColor = () => {
     const percentage = getProgressPercentage();
-    return percentage >= 70 ? 'success' : 'error';
+    return percentage >= settings.thresholdPercentage ? 'success' : 'error';
   };
 
   return (

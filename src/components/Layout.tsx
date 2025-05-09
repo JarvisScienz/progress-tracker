@@ -19,7 +19,8 @@ import {
   Dashboard as DashboardIcon,
   Add as AddIcon,
   Logout as LogoutIcon,
-  CalendarMonth as CalendarMonthIcon
+  CalendarMonth as CalendarMonthIcon,
+  Settings
 } from '@mui/icons-material';
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
@@ -42,6 +43,7 @@ export default function Layout() {
     { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
     { text: 'Agenda', icon: <CalendarMonthIcon />, path: '/agenda' },
     { text: 'Create Activity', icon: <AddIcon />, path: '/create-activity' },
+    { text: 'Settings', icon: <Settings />, path: '/settings' },
   ];
 
   const drawer = (

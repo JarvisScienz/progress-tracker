@@ -9,7 +9,9 @@ import Dashboard from './pages/Dashboard';
 import CreateActivity from './pages/CreateActivity';
 import EditActivity from './pages/EditActivity';
 import Agenda from './pages/Agenda';
+import Settings from './pages/Settings';
 import { useEffect, useState } from 'react';
+import { SettingsProvider } from './contexts/SettingsContext';
 
 const theme = createTheme({
   palette: {
@@ -110,37 +112,40 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <AuthProvider>
-        <Router>
-          {!isOnline && (
-            <Box 
-              sx={{ 
-                position: 'fixed', 
-                top: 0, 
-                width: '100%', 
-                zIndex: 9999, 
-                textAlign: 'center',
-                bgcolor: 'warning.main',
-                color: 'warning.contrastText',
-                py: 0.5,
-              }}
-            >
-              Sei offline. Alcune funzionalità potrebbero essere limitate.
-            </Box>
-          )}
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route element={<PrivateRoute />}>
-              <Route element={<Layout />}>
-                <Route index element={<Dashboard />} />
-                <Route path="create-activity" element={<CreateActivity />} />
-                <Route path="edit-activity/:id" element={<EditActivity />} />
-                <Route path="agenda" element={<Agenda />} />
+        <SettingsProvider>
+          <Router>
+            {!isOnline && (
+              <Box 
+                sx={{ 
+                  position: 'fixed', 
+                  top: 0, 
+                  width: '100%', 
+                  zIndex: 9999, 
+                  textAlign: 'center',
+                  bgcolor: 'warning.main',
+                  color: 'warning.contrastText',
+                  py: 0.5,
+                }}
+              >
+                Sei offline. Alcune funzionalità potrebbero essere limitate.
+              </Box>
+            )}
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route element={<PrivateRoute />}>
+                <Route element={<Layout />}>
+                  <Route index element={<Dashboard />} />
+                  <Route path="create-activity" element={<CreateActivity />} />
+                  <Route path="edit-activity/:id" element={<EditActivity />} />
+                  <Route path="agenda" element={<Agenda />} />
+                  <Route path="settings" element={<Settings />} />
+                </Route>
               </Route>
-            </Route>
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </Router>
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </Router>
+        </SettingsProvider>
       </AuthProvider>
       
       {/* Notifica per nuovi aggiornamenti */}

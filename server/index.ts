@@ -4,6 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth';
 import activityRoutes from './routes/activities';
+import settingsRoutes from './routes/settings';
 import { setupEmailNotifications } from './utils/emailNotifications';
 
 dotenv.config();
@@ -21,6 +22,7 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/activities', activityRoutes);
+app.use('/api/settings', settingsRoutes);
 
 // MongoDB Connection
 console.log("MONGODB_URI", process.env.MONGODB_URI);

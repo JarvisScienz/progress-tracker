@@ -5,6 +5,7 @@ export type ActivityFrequency = 'daily' | 'weekly' | 'monthly';
 interface CompletionRecord {
   date: Date;
   completed: boolean;
+  title?: string
 }
 
 export interface IActivity extends mongoose.Document {
