@@ -214,8 +214,8 @@ export default function Dashboard() {
       </Box>
       <Grid container spacing={3}>
         {activities.map((activity) => (
-          <Grid key={activity._id}>
-            <Card>
+          <Grid size={{xs:12, sm:6, md:4}}  key={activity._id}>
+            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
                   {activity.title}
