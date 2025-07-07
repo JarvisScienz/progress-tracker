@@ -22,6 +22,7 @@ import {
   TableRow,
   Paper,
   LinearProgress,
+  TextField,
 } from '@mui/material';
 import {
   Check as CheckIcon,
@@ -42,8 +43,11 @@ interface Activity {
   completionHistory: Array<{
     date: string;
     completed: boolean;
+    description?: string;
   }>;
   isActive: boolean;
+  daysRecord: number;
+  daysInRow: number;
 }
 
 interface HistoryDialogProps {
@@ -52,6 +56,7 @@ interface HistoryDialogProps {
   history: Array<{
     date: string;
     completed: boolean;
+    description?: string;
   }>;
 }
 
@@ -66,16 +71,20 @@ function HistoryDialog({ open, onClose, history }: HistoryDialogProps) {
               <TableRow>
                 <TableCell>Date</TableCell>
                 <TableCell>Status</TableCell>
+                <TableCell>Description</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {history.map((record, index) => (
+              {history.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((record, index) => (
                 <TableRow key={index}>
                   <TableCell>
                     {new Date(record.date).toLocaleDateString()}
                   </TableCell>
                   <TableCell>
                     {record.completed ? 'Completed' : 'Not Completed'}
+                  </TableCell>
+                  <TableCell>
+                    {record.description || '-'}
                   </TableCell>
                 </TableRow>
               ))}
@@ -94,6 +103,8 @@ export default function Dashboard() {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [historyDialogOpen, setHistoryDialogOpen] = useState(false);
+  const [completionDialogOpen, setCompletionDialogOpen] = useState(false);
+  const [completionDescription, setCompletionDescription] = useState('');
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
   const navigate = useNavigate();
   const { settings } = useSettings();
@@ -125,9 +136,33 @@ export default function Dashboard() {
         return recordDate.getTime() === today.getTime() && record.completed;
       });
 
-      await api.post(`/api/activities/${activityId}/complete`, {
-        completed: !isCompletedToday
+      if (!isCompletedToday) {
+        // Show completion dialog when marking as complete
+        setSelectedActivity(activity);
+        setCompletionDialogOpen(true);
+      } else {
+        // Mark as incomplete directly
+        await api.post(`/api/activities/${activityId}/complete`, {
+          completed: false
+        });
+        fetchActivities();
+      }
+    } catch (error) {
+      console.error('Error marking activity complete:', error);
+    }
+  };
+
+  const handleCompleteWithDescription = async () => {
+    if (!selectedActivity) return;
+    
+    try {
+      await api.post(`/api/activities/${selectedActivity._id}/complete`, {
+        completed: true,
+        description: completionDescription
       });
+      setCompletionDialogOpen(false);
+      setCompletionDescription('');
+      setSelectedActivity(null);
       fetchActivities();
     } catch (error) {
       console.error('Error marking activity complete:', error);
@@ -243,6 +278,12 @@ export default function Dashboard() {
                 <Typography variant="body2" color="text.secondary">
                   Completed: {activity.completionHistory.filter(h => h.completed).length} times
                 </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Days in row: {activity.daysInRow} days
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Records: {activity.daysRecord} days
+                </Typography>
               </CardContent>
               <CardActions>
                 <Button
@@ -303,6 +344,30 @@ export default function Dashboard() {
           history={selectedActivity.completionHistory}
         />
       )}
+
+      <Dialog open={completionDialogOpen} onClose={() => setCompletionDialogOpen(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>Complete Activity</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            You're about to mark "{selectedActivity?.title}" as complete.
+          </Typography>
+          <TextField
+            label="Description (optional)"
+            multiline
+            rows={3}
+            fullWidth
+            value={completionDescription}
+            onChange={(e) => setCompletionDescription(e.target.value)}
+            placeholder="Describe what you accomplished..."
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setCompletionDialogOpen(false)}>Cancel</Button>
+          <Button onClick={handleCompleteWithDescription} variant="contained" color="primary">
+            Mark Complete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
