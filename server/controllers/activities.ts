@@ -108,7 +108,7 @@ export const markActivityComplete = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const userId = (req as any).user._id;
-    const { date, completed } = req.body;
+    const { date, completed, description } = req.body;
 
     const activity = await Activity.findOne({ _id: id, userId });
     if (!activity) {
@@ -118,20 +118,62 @@ export const markActivityComplete = async (req: Request, res: Response) => {
     const targetDate = date ? new Date(date) : new Date();
     targetDate.setHours(0, 0, 0, 0);
 
+    // Get the previous day's date
+    const previousDate = new Date(targetDate);
+    previousDate.setDate(previousDate.getDate() - 1);
+
     // Check if there's already a record for this period
     const existingRecord = activity.completionHistory.find(record => 
       isSamePeriod(new Date(record.date), targetDate, activity.frequency)
     );
 
+    // Check if there was a completion record for the previous day
+    const previousRecord = activity.completionHistory.find(record =>
+      isSamePeriod(new Date(record.date), previousDate, activity.frequency)
+    );
+
     if (existingRecord) {
       // Update existing record
       existingRecord.completed = completed;
+      if (description) existingRecord.description = description;
+      
+      if (completed) {
+        if (previousRecord?.completed) {
+          // If completed today and was completed yesterday, increment streak
+          activity.daysInRow += 1;
+        } else {
+          // If completed today but wasn't completed yesterday, reset streak
+          activity.daysInRow = 1;
+        }
+      } else {
+        // If marked as not completed, reset streak
+        activity.daysInRow = 0;
+      }
     } else {
       // Add new record
       activity.completionHistory.push({
         date: targetDate,
-        completed: completed
+        completed: completed,
+        description: description
       });
+
+      if (completed) {
+        if (previousRecord?.completed) {
+          // If completed today and was completed yesterday, increment streak
+          activity.daysInRow += 1;
+        } else {
+          // If completed today but wasn't completed yesterday, start new streak
+          activity.daysInRow = 1;
+        }
+      } else {
+        // If marked as not completed, reset streak
+        activity.daysInRow = 0;
+      }
+    }
+
+    // Update daysRecord if current streak is higher
+    if (activity.daysInRow > activity.daysRecords) {
+      activity.daysRecords = activity.daysInRow;
     }
 
     await activity.save();

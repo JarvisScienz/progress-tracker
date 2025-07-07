@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api/axios';
 
 interface Settings {
   thresholdPercentage: number;
@@ -22,7 +22,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const response = await axios.get('/api/settings');
+        const response = await api.get('/api/settings');
         setSettings(response.data);
       } catch (error) {
         console.error('Failed to fetch settings:', error);
@@ -33,7 +33,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const updateSettings = async (newSettings: Partial<Settings>) => {
     try {
-      const response = await axios.put('/api/settings', newSettings);
+      const response = await api.put('/api/settings', newSettings);
       setSettings(response.data);
     } catch (error) {
       console.error('Failed to update settings:', error);

@@ -5,7 +5,8 @@ export type ActivityFrequency = 'daily' | 'weekly' | 'monthly';
 interface CompletionRecord {
   date: Date;
   completed: boolean;
-  title?: string
+  title?: string;
+  description?: string;
 }
 
 export interface IActivity extends mongoose.Document {
@@ -18,6 +19,8 @@ export interface IActivity extends mongoose.Document {
   completionHistory: CompletionRecord[];
   createdAt: Date;
   isActive: boolean;
+  daysInRow: number;
+  daysRecords: number;
 }
 
 const activitySchema = new mongoose.Schema({
@@ -57,6 +60,10 @@ const activitySchema = new mongoose.Schema({
       required: true,
       default: true,
     },
+    description: {
+      type: String,
+      trim: true,
+    },
   }],
   createdAt: {
     type: Date,
@@ -66,6 +73,14 @@ const activitySchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
+  daysInRow: {
+    type: Number,
+    default: 0
+  },
+  daysRecord: {
+    type: Number,
+    default: 0
+  } 
 });
 
 // Index for efficient querying

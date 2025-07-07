@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api/axios';
+import { useSettings } from '../contexts/SettingsContext';
 import {
   Box,
   Container,
@@ -18,7 +19,8 @@ interface Settings {
 }
 
 const Settings: React.FC = () => {
-  const [settings, setSettings] = useState<Settings>({
+  const { settings, updateSettings } = useSettings();
+  const [localSettings, setLocalSettings] = useState<Settings>({
     thresholdPercentage: 70,
     username: ''
   });
@@ -29,16 +31,8 @@ const Settings: React.FC = () => {
   const [success, setSuccess] = useState('');
 
   useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        const response = await api.get('/api/settings');
-        setSettings(response.data);
-      } catch (error) {
-        setError('Failed to load settings');
-      }
-    };
-    fetchSettings();
-  }, []);
+    setLocalSettings(settings);
+  }, [settings]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,11 +46,11 @@ const Settings: React.FC = () => {
 
     try {
       const response = await api.put('/api/settings', {
-        ...settings,
+        ...localSettings,
         currentPassword: currentPassword || undefined,
         newPassword: newPassword || undefined
       });
-      setSettings(response.data);
+      await updateSettings(response.data);
       setSuccess('Settings updated successfully');
       setCurrentPassword('');
       setNewPassword('');
@@ -77,18 +71,18 @@ const Settings: React.FC = () => {
             <TextField
               fullWidth
               label="Username"
-              value={settings.username}
-              onChange={(e) => setSettings({ ...settings, username: e.target.value })}
+              value={localSettings.username}
+              onChange={(e) => setLocalSettings({ ...localSettings, username: e.target.value })}
               margin="normal"
             />
 
             <Box sx={{ mt: 3, mb: 2 }}>
               <Typography gutterBottom>
-                Threshold Percentage: {settings.thresholdPercentage}%
+                Threshold Percentage: {localSettings.thresholdPercentage}%
               </Typography>
               <Slider
-                value={settings.thresholdPercentage}
-                onChange={(_, value) => setSettings({ ...settings, thresholdPercentage: value as number })}
+                value={localSettings.thresholdPercentage}
+                onChange={(_, value) => setLocalSettings({ ...localSettings, thresholdPercentage: value as number })}
                 min={0}
                 max={100}
                 valueLabelDisplay="auto"

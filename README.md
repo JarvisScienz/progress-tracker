@@ -55,3 +55,6 @@ progress-tracker/
 │   └── routes/        # API routes
 └── public/            # Static files
 ```
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
