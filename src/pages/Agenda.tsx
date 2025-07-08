@@ -46,8 +46,8 @@ import { useSettings } from '../contexts/SettingsContext';
 interface DayData {
   total: number;
   completed: number;
-  completedActivities: Array<string>;
-  nonCompletedActivities: Array<string>;
+  completedActivities: Array<{title: string; description?: string}>;
+  nonCompletedActivities: Array<{title: string; description?: string}>;
 }
 
 export default function Agenda() {
@@ -184,18 +184,55 @@ export default function Agenda() {
           {format(selectedDay, 'EEEE d MMMM yyyy', { locale: it })}
         </DialogTitle>
         <DialogContent>
-          {data.completedActivities.length != 0 ? (
-            <List>
-              {data.completedActivities.map((activity) => (
-                <ListItem>
-                  <ListItemIcon>
-                    {activity} <CheckIcon color="success" />
-                  </ListItemIcon>
-                </ListItem>
-              ))}
-            </List>
+          {data && data.completedActivities.length > 0 ? (
+            <Box>
+              <Typography variant="h6" gutterBottom>
+                Attività Completate
+              </Typography>
+              <List>
+                {data.completedActivities.map((activity, index) => (
+                  <ListItem key={index}>
+                    <ListItemIcon>
+                      <CheckIcon color="success" />
+                    </ListItemIcon>
+                    <Box>
+                      <Typography variant="body1">{typeof activity === 'string' ? activity : activity.title}</Typography>
+                      {typeof activity === 'object' && activity.description && (
+                        <Typography variant="body2" color="text.secondary">
+                          {activity.description}
+                        </Typography>
+                      )}
+                    </Box>
+                  </ListItem>
+                ))}
+              </List>
+            </Box>
           ) : (
-            <Typography>Nessuna attività registrata per questo giorno</Typography>
+            <Typography>Nessuna attività completata per questo giorno</Typography>
+          )}
+          {data && data.nonCompletedActivities.length > 0 && (
+            <Box sx={{ mt: 2 }}>
+              <Typography variant="h6" gutterBottom>
+                Attività Non Completate
+              </Typography>
+              <List>
+                {data.nonCompletedActivities.map((activity, index) => (
+                  <ListItem key={index}>
+                    <ListItemIcon>
+                      <CloseIcon color="error" />
+                    </ListItemIcon>
+                    <Box>
+                      <Typography variant="body1">{typeof activity === 'string' ? activity : activity.title}</Typography>
+                      {typeof activity === 'object' && activity.description && (
+                        <Typography variant="body2" color="text.secondary">
+                          {activity.description}
+                        </Typography>
+                      )}
+                    </Box>
+                  </ListItem>
+                ))}
+              </List>
+            </Box>
           )}
         </DialogContent>
         <DialogActions>

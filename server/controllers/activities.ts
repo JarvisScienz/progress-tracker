@@ -115,8 +115,9 @@ export const markActivityComplete = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Activity not found' });
     }
 
-    const targetDate = date ? new Date(date) : new Date();
-    targetDate.setHours(0, 0, 0, 0);
+    // Create date in local timezone
+    const now = new Date();
+    const targetDate = date ? new Date(date) : new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
     // Get the previous day's date
     const previousDate = new Date(targetDate);
@@ -230,20 +231,11 @@ export const getActivitiesForMonth = async (req: Request, res: Response) => {
     const monthData: Record<string, { 
       total: number; 
       completed: number;
-      completedActivities: string[];
-      nonCompletedActivities: string[];
+      completedActivities: Array<{title: string; description?: string}>;
+      nonCompletedActivities: Array<{title: string; description?: string}>;
     }> = {};
     
-    // Initialize all days in the month
-    for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
-      const dateStr = date.toISOString().split('T')[0];
-      monthData[dateStr] = { 
-        total: 0, 
-        completed: 0,
-        completedActivities: [],
-        nonCompletedActivities: []
-      };
-    }
+    // Don't initialize days - only add them when there's actual activity data
 
     // Count activities for each day
     activities.forEach(activity => {
@@ -262,9 +254,15 @@ export const getActivitiesForMonth = async (req: Request, res: Response) => {
           monthData[dateStr].total++;
           if (record.completed) {
             monthData[dateStr].completed++;
-            monthData[dateStr].completedActivities.push(activity.title);
+            monthData[dateStr].completedActivities.push({
+              title: activity.title,
+              description: record.description
+            });
           } else {
-            monthData[dateStr].nonCompletedActivities.push(activity.title);
+            monthData[dateStr].nonCompletedActivities.push({
+              title: activity.title,
+              description: record.description
+            });
           }
         }
       });

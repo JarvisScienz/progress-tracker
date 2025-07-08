@@ -142,8 +142,12 @@ export default function Dashboard() {
         setCompletionDialogOpen(true);
       } else {
         // Mark as incomplete directly
+        const today = new Date();
+        const localDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        
         await api.post(`/api/activities/${activityId}/complete`, {
-          completed: false
+          completed: false,
+          date: localDate
         });
         fetchActivities();
       }
@@ -156,9 +160,13 @@ export default function Dashboard() {
     if (!selectedActivity) return;
     
     try {
+      const today = new Date();
+      const localDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), today.getHours(), today.getMinutes(), today.getSeconds());
+      
       await api.post(`/api/activities/${selectedActivity._id}/complete`, {
         completed: true,
-        description: completionDescription
+        description: completionDescription,
+        date: localDate
       });
       setCompletionDialogOpen(false);
       setCompletionDescription('');
