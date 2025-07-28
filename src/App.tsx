@@ -11,11 +11,11 @@ import EditActivity from './pages/EditActivity';
 import Agenda from './pages/Agenda';
 import Settings from './pages/Settings';
 import { useEffect, useState } from 'react';
-import { SettingsProvider } from './contexts/SettingsContext';
+import { SettingsProvider, useSettings } from './contexts/SettingsContext';
 
-const theme = createTheme({
+const createAppTheme = (darkMode: boolean) => createTheme({
   palette: {
-    mode: 'light',
+    mode: darkMode ? 'dark' : 'light',
     primary: {
       main: '#1976d2',
     },
@@ -46,10 +46,11 @@ function PrivateRoute() {
   return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
 }
 
-function App() {
+function AppContent() {
   const [isUpdateAvailable, setIsUpdateAvailable] = useState(false);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [swRegistration, setSwRegistration] = useState<ServiceWorkerRegistration | null>(null);
+  const { settings } = useSettings();
 
   // Gestione online/offline
   useEffect(() => {
@@ -109,11 +110,9 @@ function App() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={createAppTheme(settings.darkMode)}>
       <CssBaseline />
-      <AuthProvider>
-        <SettingsProvider>
-          <Router>
+      <Router>
             {!isOnline && (
               <Box 
                 sx={{ 
@@ -145,8 +144,6 @@ function App() {
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Router>
-        </SettingsProvider>
-      </AuthProvider>
       
       {/* Notifica per nuovi aggiornamenti */}
       <Snackbar 
@@ -178,6 +175,16 @@ function App() {
         </Alert>
       </Snackbar>
     </ThemeProvider>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <SettingsProvider>
+        <AppContent />
+      </SettingsProvider>
+    </AuthProvider>
   );
 }
 

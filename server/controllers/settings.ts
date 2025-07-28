@@ -14,7 +14,8 @@ export const getSettings = async (req: Request, res: Response) => {
       settings = await Settings.create({
         userId,
         thresholdPercentage: 70,
-        username: user?.name || ''
+        username: user?.name || '',
+        darkMode: false
       });
     }
 
@@ -28,7 +29,7 @@ export const getSettings = async (req: Request, res: Response) => {
 export const updateSettings = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user._id;
-    const { thresholdPercentage, username, currentPassword, newPassword } = req.body;
+    const { thresholdPercentage, username, currentPassword, newPassword, darkMode } = req.body;
 
     let settings = await Settings.findOne({ userId });
     if (!settings) {
@@ -45,6 +46,11 @@ export const updateSettings = async (req: Request, res: Response) => {
       settings.username = username;
       // Also update username in User model
       await User.findByIdAndUpdate(userId, { username });
+    }
+
+    // Update darkMode if provided
+    if (darkMode !== undefined) {
+      settings.darkMode = darkMode;
     }
 
     // Update password if provided

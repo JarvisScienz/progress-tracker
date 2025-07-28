@@ -10,19 +10,23 @@ import {
   Paper,
   Slider,
   Alert,
-  Snackbar
+  Snackbar,
+  FormControlLabel,
+  Switch
 } from '@mui/material';
 
 interface Settings {
   thresholdPercentage: number;
   username: string;
+  darkMode: boolean;
 }
 
 const Settings: React.FC = () => {
   const { settings, updateSettings } = useSettings();
   const [localSettings, setLocalSettings] = useState<Settings>({
     thresholdPercentage: 70,
-    username: ''
+    username: '',
+    darkMode: false
   });
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -86,6 +90,26 @@ const Settings: React.FC = () => {
                 min={0}
                 max={100}
                 valueLabelDisplay="auto"
+              />
+            </Box>
+
+            <Box sx={{ mt: 3, mb: 2 }}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={localSettings.darkMode}
+                    onChange={async (e) => {
+                      const newDarkMode = e.target.checked;
+                      setLocalSettings({ ...localSettings, darkMode: newDarkMode });
+                      try {
+                        await updateSettings({ darkMode: newDarkMode });
+                      } catch (error) {
+                        setError('Failed to update dark mode setting');
+                      }
+                    }}
+                  />
+                }
+                label="Dark Mode"
               />
             </Box>
 

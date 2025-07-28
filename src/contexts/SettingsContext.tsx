@@ -4,6 +4,7 @@ import api from '../api/axios';
 interface Settings {
   thresholdPercentage: number;
   username: string;
+  darkMode: boolean;
 }
 
 interface SettingsContextType {
@@ -16,7 +17,8 @@ const SettingsContext = createContext<SettingsContextType | undefined>(undefined
 export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [settings, setSettings] = useState<Settings>({
     thresholdPercentage: 70,
-    username: ''
+    username: '',
+    darkMode: false
   });
 
   useEffect(() => {

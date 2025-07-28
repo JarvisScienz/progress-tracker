@@ -4,6 +4,7 @@ export interface ISettings extends Document {
   userId: mongoose.Types.ObjectId;
   thresholdPercentage: number;
   username: string;
+  darkMode: boolean;
 }
 
 const SettingsSchema = new Schema({
@@ -22,6 +23,10 @@ const SettingsSchema = new Schema({
   username: {
     type: String,
     required: true
+  },
+  darkMode: {
+    type: Boolean,
+    default: false
   }
 });
 
