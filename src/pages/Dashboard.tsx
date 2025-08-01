@@ -236,11 +236,11 @@ export default function Dashboard() {
 
   return (
     <Box>
-      <Box sx={{ mb: 4 }}>
+      <Box sx={{ mb: 4, width: '100%' }}>
         <Typography variant="h4" gutterBottom>
-          Your Activities
+          Hi {settings.username}, Your Activities
         </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2, width: '100%' }}>
           <Typography variant="h6">
             Progress: {getCompletedCount()}/{activities.length} activities completed
           </Typography>
@@ -260,7 +260,7 @@ export default function Dashboard() {
       <Grid container spacing={3}>
         {activities.map((activity) => (
           <Grid size={{xs:12, sm:6, md:4}}  key={activity._id}>
-            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', borderRadius: 3 }}>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
                   {activity.title}

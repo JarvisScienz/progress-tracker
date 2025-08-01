@@ -249,11 +249,8 @@ export default function Agenda() {
       display: 'flex', 
       flexDirection: 'column', 
       height: '100%',
-      width: '80%',
-      maxWidth: '100%',
-      position: 'absolute',
+      width: '100%',
       bgcolor: 'background.default',
-      top: 80,
     }}>
       <AppBar 
         position="static" 

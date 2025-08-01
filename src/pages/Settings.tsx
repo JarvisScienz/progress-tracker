@@ -65,12 +65,18 @@ const Settings: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="sm">
-      <Box sx={{ mt: 4, mb: 4 }}>
+    <Box sx={{ 
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      minHeight: '80vh'
+    }}>
+      <Box sx={{ width: '100%', maxWidth: 'sm' }}>
         <Typography variant="h4" component="h1" gutterBottom>
           Settings
         </Typography>
-        <Paper sx={{ p: 3 }}>
+        <Paper sx={{ p: 3, width: '100%' }}>
           <form onSubmit={handleSubmit}>
             <TextField
               fullWidth
@@ -78,6 +84,11 @@ const Settings: React.FC = () => {
               value={localSettings.username}
               onChange={(e) => setLocalSettings({ ...localSettings, username: e.target.value })}
               margin="normal"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 3,
+                },
+              }}
             />
 
             <Box sx={{ mt: 3, mb: 2 }}>
@@ -123,6 +134,11 @@ const Settings: React.FC = () => {
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
               margin="normal"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 3,
+                },
+              }}
             />
             <TextField
               fullWidth
@@ -131,6 +147,11 @@ const Settings: React.FC = () => {
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               margin="normal"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 3,
+                },
+              }}
             />
             <TextField
               fullWidth
@@ -139,6 +160,11 @@ const Settings: React.FC = () => {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               margin="normal"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 3,
+                },
+              }}
             />
 
             <Button
@@ -146,7 +172,12 @@ const Settings: React.FC = () => {
               variant="contained"
               color="primary"
               fullWidth
-              sx={{ mt: 3 }}
+              sx={{
+                mt: 3,
+                borderRadius: 3,
+                width: '40%',
+                float: 'right',
+              }}
             >
               Save Changes
             </Button>
@@ -173,7 +204,8 @@ const Settings: React.FC = () => {
           {success}
         </Alert>
       </Snackbar>
-    </Container>
+      </Box>
+    
   );
 };
 

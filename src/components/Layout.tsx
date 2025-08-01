@@ -1,10 +1,8 @@
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import {
-  AppBar,
   Box,
   CssBaseline,
   Drawer,
-  IconButton,
   List,
   ListItemIcon,
   ListItemText,
@@ -13,6 +11,7 @@ import {
   useTheme,
   useMediaQuery,
   ListItemButton,
+  Fab,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -31,6 +30,7 @@ export default function Layout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   //const isTablet = useMediaQuery(theme.breakpoints.down('md'));
@@ -49,36 +49,54 @@ export default function Layout() {
   const drawer = (
     <div>
       <Toolbar>
-        <Typography variant="h6" noWrap component="div">
+        <Typography variant="h6" noWrap component="div" sx={{ color: 'white' }}>
           Progress Tracker
         </Typography>
       </Toolbar>
       <List>
-        {menuItems.map((item) => (
-          <ListItemButton
-            key={item.text}
-            onClick={() => {
-              navigate(item.path);
-              setMobileOpen(false);
-            }}
-            sx={{
-              '&:hover': {
-                backgroundColor: theme.palette.action.hover,
-              },
-            }}
-          >
-            <ListItemIcon>{item.icon}</ListItemIcon>
-            <ListItemText primary={item.text} />
-          </ListItemButton>
-        ))}
+        {menuItems.map((item) => {
+          const isActive = location.pathname === item.path;
+          return (
+            <ListItemButton
+              key={item.text}
+              onClick={() => {
+                navigate(item.path);
+                setMobileOpen(false);
+              }}
+              sx={{
+                color: 'white',
+                backgroundColor: isActive ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                },
+                '& .MuiListItemIcon-root': {
+                  color: 'white',
+                },
+                '& .MuiListItemText-root': {
+                  color: 'white',
+                },
+              }}
+            >
+              <ListItemIcon>{item.icon}</ListItemIcon>
+              <ListItemText primary={item.text} />
+            </ListItemButton>
+          );
+        })}
         <ListItemButton
           onClick={() => {
             logout();
             navigate('/login');
           }}
           sx={{
+            color: 'white',
             '&:hover': {
-              backgroundColor: theme.palette.action.hover,
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            },
+            '& .MuiListItemIcon-root': {
+              color: 'white',
+            },
+            '& .MuiListItemText-root': {
+              color: 'white',
             },
           }}
         >
@@ -94,31 +112,9 @@ export default function Layout() {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar
-        position="fixed"
-        sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
-        }}
-      >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            {user?.name || 'Progress Tracker'}
-          </Typography>
-        </Toolbar>
-      </AppBar>
       <Box
         component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+        sx={{ flexShrink: { sm: 0 } }}
       >
         <Drawer
           variant={isMobile ? "temporary" : "permanent"}
@@ -131,6 +127,7 @@ export default function Layout() {
             '& .MuiDrawer-paper': {
               boxSizing: 'border-box',
               width: drawerWidth,
+              background: 'linear-gradient(135deg, #6B46C1 0%, #3B82F6 100%)',
             },
           }}
         >
@@ -141,12 +138,41 @@ export default function Layout() {
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          mt: { xs: 7, sm: 8 },
+          ml: { sm: `${drawerWidth}px` },
+          backgroundColor: 'aliceblue',
+          minHeight: '100vh',
+          width: '100%',
+          position: 'relative',
         }}
       >
-        <Outlet />
+        {/* Mobile menu button */}
+        {isMobile && !mobileOpen && (
+          <Fab
+            color="primary"
+            aria-label="open drawer"
+            onClick={handleDrawerToggle}
+            sx={{
+              position: 'fixed',
+              top: 16,
+              left: 16,
+              zIndex: 1300,
+              background: 'linear-gradient(135deg, #6B46C1 0%, #3B82F6 100%)',
+              '&:hover': {
+                background: 'linear-gradient(135deg, #5B21B6 0%, #2563EB 100%)',
+              },
+            }}
+          >
+            <MenuIcon />
+          </Fab>
+        )}
+        <Box sx={{ 
+          p: 3, 
+          margin: '0 auto',
+          pt: { xs: 10, sm: 3 }, // Extra top padding on mobile for hamburger menu
+          //maxWidth: '1200px'
+        }}>
+          <Outlet />
+        </Box>
       </Box>
     </Box>
   );

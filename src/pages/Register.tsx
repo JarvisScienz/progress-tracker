@@ -35,15 +35,14 @@ export default function Register() {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
+    <Box sx={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      minHeight: '80vh'
+    }}>
+      <Box sx={{ width: '100%', maxWidth: 'xs' }}>
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
@@ -64,6 +63,11 @@ export default function Register() {
             autoFocus
             value={name}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 3,
+              },
+            }}
           />
           <TextField
             margin="normal"
@@ -75,6 +79,11 @@ export default function Register() {
             autoComplete="email"
             value={email}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 3,
+              },
+            }}
           />
           <TextField
             margin="normal"
@@ -87,6 +96,11 @@ export default function Register() {
             autoComplete="new-password"
             value={password}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 3,
+              },
+            }}
           />
           <TextField
             margin="normal"
@@ -98,6 +112,11 @@ export default function Register() {
             id="confirmPassword"
             value={confirmPassword}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setConfirmPassword(e.target.value)}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 3,
+              },
+            }}
           />
           <Button
             type="submit"
@@ -114,6 +133,6 @@ export default function Register() {
           </Box>
         </Box>
       </Box>
-    </Container>
+    </Box>
   );
 } 

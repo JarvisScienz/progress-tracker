@@ -49,8 +49,14 @@ export default function CreateActivity() {
   };
 
   return (
-    <Container maxWidth="sm">
-      <Box sx={{ mt: 4 }}>
+    <Box sx={{ 
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      minHeight: '80vh'
+    }}>
+      <Box sx={{ width: '100%', maxWidth: 'sm' }}>
         <Typography variant="h4" gutterBottom>
           Create New Activity
         </Typography>
@@ -59,7 +65,7 @@ export default function CreateActivity() {
             {error}
           </Alert>
         )}
-        <Box component="form" onSubmit={handleSubmit}>
+        <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
           <TextField
             fullWidth
             label="Title"
@@ -68,6 +74,11 @@ export default function CreateActivity() {
             onChange={handleChange}
             required
             margin="normal"
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 3,
+              },
+            }}
           />
           <TextField
             fullWidth
@@ -78,6 +89,11 @@ export default function CreateActivity() {
             multiline
             rows={4}
             margin="normal"
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 3,
+              },
+            }}
           />
           <TextField
             fullWidth
@@ -88,6 +104,11 @@ export default function CreateActivity() {
             onChange={handleChange}
             required
             margin="normal"
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 3,
+              },
+            }}
           >
             <MenuItem value="daily">Daily</MenuItem>
             <MenuItem value="weekly">Weekly</MenuItem>
@@ -105,6 +126,11 @@ export default function CreateActivity() {
             InputLabelProps={{
               shrink: true,
             }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 3,
+              },
+            }}
           />
           <TextField
             fullWidth
@@ -117,6 +143,11 @@ export default function CreateActivity() {
             InputLabelProps={{
               shrink: true,
             }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 3,
+              },
+            }}
           />
           <Box sx={{ mt: 3 }}>
             <Button
@@ -125,12 +156,17 @@ export default function CreateActivity() {
               color="primary"
               fullWidth
               size="large"
+              sx={{
+                borderRadius: 3,
+                width: '40%',
+                float: 'right',
+              }}
             >
               Create Activity
             </Button>
           </Box>
         </Box>
       </Box>
-    </Container>
+    </Box>
   );
 } 

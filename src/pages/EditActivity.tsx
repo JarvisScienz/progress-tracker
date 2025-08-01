@@ -79,15 +79,14 @@ export default function EditActivity() {
   }
 
   return (
-    <Container component="main" maxWidth="sm">
-      <Box
-        sx={{
-          marginTop: 4,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
+    <Box sx={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      minHeight: '80vh'
+    }}>
+      <Box sx={{ width: '100%', maxWidth: 'sm' }}>
         <Typography component="h1" variant="h5">
           Edit Activity
         </Typography>
@@ -106,6 +105,11 @@ export default function EditActivity() {
             name="title"
             value={activity.title}
             onChange={handleChange}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 3,
+              },
+            }}
           />
           <TextField
             margin="normal"
@@ -118,6 +122,11 @@ export default function EditActivity() {
             rows={4}
             value={activity.description}
             onChange={handleChange}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 3,
+              },
+            }}
           />
           <TextField
             margin="normal"
@@ -129,6 +138,11 @@ export default function EditActivity() {
             name="frequency"
             value={activity.frequency}
             onChange={handleChange}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 3,
+              },
+            }}
           >
             <MenuItem value="daily">Daily</MenuItem>
             <MenuItem value="weekly">Weekly</MenuItem>
@@ -147,6 +161,11 @@ export default function EditActivity() {
             InputLabelProps={{
               shrink: true,
             }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 3,
+              },
+            }}
           />
           <TextField
             margin="normal"
@@ -159,6 +178,11 @@ export default function EditActivity() {
             onChange={handleChange}
             InputLabelProps={{
               shrink: true,
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 3,
+              },
             }}
           />
           <Button
@@ -179,6 +203,6 @@ export default function EditActivity() {
           </Button>
         </Box>
       </Box>
-    </Container>
+    </Box>
   );
 } 
